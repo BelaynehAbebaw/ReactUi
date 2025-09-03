@@ -1,23 +1,23 @@
-// src/api/paymentApi.js
-import axios from "axios";
+const API_BASE_URL = "http://localhost:5006/api";
 
-const API_BASE_URL = "https://localhost:7282/api";
+export const createTransaction = async (data) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/Payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-export const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
+    const result = await res.json(); // always parse JSON
 
-// Users
-export const getUsers = () => api.get("/users");
-export const getUserById = (id) => api.get(`/users/${id}`);
+    if (!res.ok) {
+      // Non-200 responses throw
+      throw new Error(result.message || 'Payment failed');
+    }
 
-// Accounts
-export const getAccounts = () => api.get("/accounts");
-
-// Transactions
-export const createTransaction = (data) => api.post(data, controller);
-export const getTransactions = () => api.get("/transactions");
-
-// Payment Methods
-export const getPaymentMethods = () => api.get("/paymentmethods");
+    return result; // always returns the object
+  } catch (err) {
+    console.error(err);
+    throw err; // component will handle notification
+  }
+};

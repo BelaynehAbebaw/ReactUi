@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNotification } from '../services/notificationService';
 import { 
   Box, 
   TextField, 
@@ -23,15 +24,17 @@ import { createTransaction } from '../Api/payment_Api'; // Adjust the path as ne
 
 function payment() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    AccountNumber: '',
-    expiryDate: '',
-    cvv: '',
-    amount: '',
-    accountNumber: '',
-    routingNumber: ''
+      Id:0,
+      FirstName:'',
+      MiddleName: '',
+      LastName: '',
+      Amount: '',
+      BankName:'',
+      paymentMethod: 'BankTransfer',
+      AccountNumber: '',
+      Status:'',
+      TransactionId:'rx',
+      TransactionDate:''
   });
   const [errors, setErrors] = useState({});
   const [showCardDetails, setShowCardDetails] = useState(false);
@@ -39,6 +42,7 @@ function payment() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+    const { notification, showNotification, hideNotification } = useNotification();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,44 +88,40 @@ function payment() {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+// payment.jsx
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+ 
+
+  try {
+    const transactionData = {
+      Id:0,
+      FirstName: formData.FirstName,
+      MiddleName: formData.MiddleName,
+      LastName: formData.LastName,
+      Amount: parseFloat(formData.Amount),
+      BankName: formData.BankName,
+      paymentMethod: 'BankTransfer',
+      AccountNumber: formData.AccountNumber,
+      Status:'pending',
+      TransactionId:'rx',
+      TransactionDate: new Date()
+    };
+
+    console.log('Sending data:', transactionData); // Debug log
     
-    if (!validateForm()) {
-      return;
-    }
-    
-    setLoading(true);
-    setApiError('');
-    
-    try {
-      // Prepare the data for API
-      const transactionData = {
-        firstName: formData.firstName,
-        middleName: formData.middleName,
-        lastName: formData.lastName,
-        amount: parseFloat(formData.amount),
-        paymentMethod: showCardDetails ='BankTransfer',
-        // Add payment method specific details
-        ...(showCardDetails ? {
-          AccountNumber: formData.AccountNumber.replace(/\s/g, ''),
-          expiryDate: formData.expiryDate,
-          cvv: formData.cvv
-        } : {
-          accountNumber: formData.accountNumber,
-          routingNumber: formData.routingNumber
-        })
-      };
-      
-      // Call the API
-      const response = await createTransaction(transactionData);
-      if(response.sucess){
-      console.log('Transaction created:', response.data);
-      setSubmitted(true);
+const response = await createTransaction(transactionData);
+     if (response?.success) {
+          console.log('Sending data:', response.message); // Debug log
+        showNotification(response.message || 'Payment processed successfully!', 'success');
+        setSubmitted(true);
+      } else {
+        showNotification(response?.message || 'Payment failed. Please try again.', 'error');
       }
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-      setApiError(error.response?.data?.message || 'Failed to process payment. Please try again.');
+    } catch (err) {
+      showNotification(err.message || 'Payment failed. Please try again.', 'error');
+      console.error('Transaction failed:', err);
     } finally {
       setLoading(false);
     }
@@ -203,11 +203,11 @@ function payment() {
                 <TextField
                   fullWidth
                   label="First Name"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="FirstName"
+                  value={formData.FirstName}
                   onChange={handleChange}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName}
+                  error={!!errors.FirstName}
+                  helperText={errors.FirstName}
                   required
                   disabled={loading}
                 />
@@ -217,8 +217,8 @@ function payment() {
                 <TextField
                   fullWidth
                   label="Middle Name"
-                  name="middleName"
-                  value={formData.middleName}
+                  name="MiddleName"
+                  value={formData.MiddleName}
                   onChange={handleChange}
                   disabled={loading}
                 />
@@ -228,11 +228,11 @@ function payment() {
                 <TextField
                   fullWidth
                   label="Last Name"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="LastName"
+                  value={formData.LastName}
                   onChange={handleChange}
-                  error={!!errors.lastName}
-                  helperText={errors.lastName}
+                  error={!!errors.LastName}
+                  helperText={errors.LastName}
                   required
                   disabled={loading}
                 />
@@ -321,11 +321,11 @@ function payment() {
                     <TextField
                       fullWidth
                       label="Account Number"
-                      name="accountNumber"
-                      value={formData.accountNumber}
+                      name="AccountNumber"
+                      value={formData.AccountNumber}
                       onChange={handleChange}
-                      error={!!errors.accountNumber}
-                      helperText={errors.accountNumber}
+                      error={!!errors.AccountNumber}
+                      helperText={errors.AccountNumber}
                       required
                       disabled={loading}
                     />
@@ -335,12 +335,12 @@ function payment() {
                 <TextField
                   fullWidth
                   label="Amount"
-                  name="amount"
+                  name="Amount"
                   type="number"
-                  value={formData.amount}
+                  value={formData.Amount}
                   onChange={handleChange}
-                  error={!!errors.amount}
-                  helperText={errors.amount}
+                  error={!!errors.Amount}
+                  helperText={errors.Amount}
                
                   required
                   disabled={loading}
