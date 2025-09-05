@@ -31,8 +31,8 @@ function App() {
         <Box
           component="main"
           sx={{
-            flexGrow: 1,
-            p: 3,
+           
+        
             mt: '64px', // AppBar height
             transition: theme.transitions.create('margin', {
               easing: theme.transitions.easing.sharp,
