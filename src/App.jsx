@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import Header from './components/header';
-import Sidebar, { drawerWidth } from './components/sidebar';
+import Header from './shared/ui/Header';
+import Sidebar, { drawerWidth } from './shared/ui/Sidebar';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -31,8 +31,8 @@ function App() {
         <Box
           component="main"
           sx={{
-            flexGrow: 1,
-            p: 3,
+           
+        
             mt: '64px', // AppBar height
             transition: theme.transitions.create('margin', {
               easing: theme.transitions.easing.sharp,

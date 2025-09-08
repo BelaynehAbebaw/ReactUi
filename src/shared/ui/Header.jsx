@@ -13,7 +13,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import EcxLogo from '../assets/images/EcxLogo.jpg';
+import EcxLogo from '../../assets/images/EcxLogo.jpg';
 import { Snackbar, Alert } from '@mui/material';
 import { registerNotification } from '../services/notificationService';
 import { useNavigate } from 'react-router-dom';
