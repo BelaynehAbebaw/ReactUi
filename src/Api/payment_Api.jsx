@@ -1,5 +1,5 @@
 import { triggerNotification  } from '../services/notificationService';
-  const API_BASE_URL = "http://localhost:5006/api";
+  const API_BASE_URL = "http://localhost:5107/api";
 export const createTransaction = async (data) => {
   try {
     const res = await fetch(`${API_BASE_URL}/Payment`, {
@@ -20,6 +20,18 @@ console.log(result)
     throw err;
   }
 };
+export const Authenticate=async(data)=>{
+  console.log(data)
+  const result=await fetch(`${API_BASE_URL}/Auth`,{
+    method:'POST',
+    headers:{"content-Type":"application/json"},
+    body:JSON.stringify(data)
+  },);
+  const response=await result.json();
+   triggerNotification(response.message, 'success');
+  return response;
+
+}
 
 // ✅ Get all transactions
 export const getAllTransactions = async () => {

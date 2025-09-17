@@ -1,70 +1,38 @@
-import { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
-import Header from './components/header';
-import Sidebar, { drawerWidth } from './components/sidebar';
-import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import appRoutes from './Routes.jsx';
-
+import AuthLayout from './layouts/AuthLayout.jsx';
+import MainLayout from './layouts/MainLayout.jsx';
+import AuthRoutes from './routes/AuthRoutes.jsx';
+import AppRoutes from './routes/AppRoutes.jsx';
+import LoginPage from './features/auth/pages/Login.jsx';
 
 function App() {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(!isSmallScreen);
-  const toggleDrawer = () => setIsDrawerOpen(prev => !prev);
-
   return (
+    <Routes>
+      {/* Default login page at / */}
+      <Route path="/" element={<AuthLayout><LoginPage /></AuthLayout>} />
 
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {/* Header */}
-      <Header toggleDrawer={toggleDrawer} />
+      {/* Auth routes (login/register) */}
+      {AuthRoutes.map(route => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<AuthLayout>{route.element}</AuthLayout>}
+        />
+      ))}
 
-      {/* Body */}
-      <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        {/* Sidebar */}
-        <Sidebar isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
+      {/* Main app routes (dashboard) */}
+      {AppRoutes.map(route => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<MainLayout>{route.element}</MainLayout>}
+        />
+      ))}
 
-        {/* Main content */}
-        <Box
-          component="main"
-          sx={{
-           
-        
-            mt: '64px', // AppBar height
-            transition: theme.transitions.create('margin', {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.leavingScreen,
-            }),
-       
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            {appRoutes.map(route => (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-
-        </Box>
-      </Box>
-
-      {/* Footer */}
-      <Box
-        component="footer"
-        sx={{
-          p: 2,
-          backgroundColor: 'black',
-          color: 'white',
-          textAlign: 'center',
-        }}
-      >
-        © 2025 Payment and SLA System. All rights reserved.
-      </Box>
-    </Box>
-
+      {/* Fallback for unknown routes */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 

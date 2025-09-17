@@ -20,6 +20,7 @@ export default function payment() {
     { field: 'lastName', headerName: 'Last Name', width: 120 },
     { field: 'amount', headerName: 'Amount', width: 100 },
     { field: 'bankName', headerName: 'Bank Name', width: 150 },
+     { field: 'transactionId', headerName: 'Transaction Id', width: 150 },
   ];
 // Fetch dynamic data from API
 const fetchData = async () => {
@@ -116,7 +117,7 @@ if (response.success) {
   };
 
   return (
-    <Box sx={{ maxWidth: 900, mx: 'auto', p: 3 }}>
+    <Box sx={{ Width: '100%', p: 3 }}>
       <Typography variant="h4" align="center" color="primary" gutterBottom>
         <Payment sx={{ fontSize: 40, verticalAlign: 'bottom', mr: 1 }} /> Payment Form
       </Typography>
